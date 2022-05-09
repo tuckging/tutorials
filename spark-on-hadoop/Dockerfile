@@ -1,4 +1,3 @@
-# Dockerfile
 FROM ubuntu:20.04 AS hadoop
 
 ARG DEBIAN_FRONTEND=noninteractive
