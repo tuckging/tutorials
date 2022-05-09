@@ -2,7 +2,7 @@ FROM ubuntu:20.04 AS hadoop
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
- && apt-get install -y openjdk-8-jre curl python3 python3-pip \
+ && apt-get install -y openjdk-8-jre curl python3 python3-pip zip \
  && rm -rf /var/lib/apt/lists/*
 ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre"
 
