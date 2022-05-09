@@ -1,0 +1,65 @@
+---
+version: '3.0'
+
+x-hadoop:
+  &hadoop
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: hadoop
+  volumes:
+    - ./hadoop:/opt/hadoop-3.2.3/etc/hadoop
+  deploy:
+    resources:
+      limits:
+        cpus: 2
+x-hadoop-worker:
+  <<: *hadoop
+  entrypoint: |
+    bash -c "
+      bin/hdfs --daemon start datanode
+      bin/yarn --daemon start nodemanager
+      sleep infinity
+    "
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: jupyter
+    hostname: jupyter
+    volumes:
+      - ./hadoop:/etc/hadoop
+    environment:
+      - HADOOP_CONF_DIR=/etc/hadoop
+    ports:
+      - 8888:8888
+      - 4040:4040
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+  master:
+    <<: *hadoop
+    hostname: master
+    entrypoint: |
+      bash -c "
+        mkdir -p /tmp/hadoop-root/dfs/name
+        bin/hdfs namenode -format cluster_name
+        bin/hdfs --daemon start namenode
+        bin/yarn --daemon start resourcemanager
+        sleep infinity
+      "
+    ports:
+      - 9870:9870 # NameNode UI
+      - 8088:8088 # ResourceManager UI
+  worker1:
+    <<: *hadoop-worker
+    hostname: worker1
+  worker2:
+    <<: *hadoop-worker
+    hostname: worker2
+  worker3:
+    <<: *hadoop-worker
+    hostname: worker3
