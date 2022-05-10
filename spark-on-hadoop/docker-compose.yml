@@ -22,6 +22,8 @@ x-hadoop-worker:
       bin/yarn --daemon start nodemanager
       sleep infinity
     "
+  depends_on:
+    - master
 
 services:
   jupyter:
@@ -36,7 +38,7 @@ services:
       - HADOOP_CONF_DIR=/etc/hadoop
     ports:
       - 8888:8888
-      - 4040:4040
+      - 4040-4050:4040-4050
     deploy:
       resources:
         limits:
@@ -47,7 +49,7 @@ services:
     entrypoint: |
       bash -c "
         mkdir -p /tmp/hadoop-root/dfs/name
-        bin/hdfs namenode -format cluster_name
+        bin/hdfs namenode -format cluster_name -force
         bin/hdfs --daemon start namenode
         bin/yarn --daemon start resourcemanager
         sleep infinity
