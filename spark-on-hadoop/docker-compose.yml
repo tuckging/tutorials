@@ -34,6 +34,7 @@ services:
     hostname: jupyter
     volumes:
       - ./hadoop:/etc/hadoop
+      - ./notebooks:/app
     environment:
       - HADOOP_CONF_DIR=/etc/hadoop
     ports:
