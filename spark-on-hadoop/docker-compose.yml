@@ -12,7 +12,7 @@ x-hadoop:
   deploy:
     resources:
       limits:
-        cpus: 2
+        cpus: "2"
 x-hadoop-worker:
   &hadoop-worker
   <<: *hadoop
@@ -43,7 +43,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: 2
+          cpus: "2"
   master:
     <<: *hadoop
     hostname: master
